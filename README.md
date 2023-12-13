@@ -24,5 +24,7 @@ message info (LIFT, PAN, WHEEL)
 msg_pkg/target
 
 int16[3] target_torque
+
 int32[3] target_pos
+
 int32[3] target_vel
