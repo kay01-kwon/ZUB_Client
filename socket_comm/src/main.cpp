@@ -7,7 +7,7 @@ int main(int argc, char** argv)
 
     SOCK_COMM sock_comm;
 
-    ros::Rate loop_rate(100);
+    ros::Rate loop_rate(50);
 
     while(ros::ok())
     {

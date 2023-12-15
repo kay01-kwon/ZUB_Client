@@ -12,14 +12,14 @@
 
 #include <ros/ros.h>
 #include <msg_pkg/target.h>
-
-#include <std_msgs/Int32.h>
+#include <msg_pkg/actual.h>
 
 #include <string.h>
 
 using std::cout;
 using std::endl;
 using msg_pkg::target;
+using msg_pkg::actual;
 
 class SOCK_COMM{
 
@@ -37,6 +37,8 @@ class SOCK_COMM{
 
         void publish_ActualData();
 
+        void actual_data();
+
 
     private:
 
@@ -49,8 +51,10 @@ class SOCK_COMM{
         ros::Publisher nh_publisher;
         ros::Subscriber nh_subscriber;
 
+        actual pub_data;
 
-        uint8_t send_data[BUF_LEN], recv_data[BUF_LEN];
+        uint8_t send_data[SEND_BUF_LEN], recv_data[RECV_BUF_LEN];
+        int recv_len;
 
         int32_t Actual_PAN_pos[NUM_PAN];
 
