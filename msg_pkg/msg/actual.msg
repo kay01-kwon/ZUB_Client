@@ -1,3 +1,4 @@
+time stamp
 int16[3] act_LIFT_torque
 int32[3] act_LIFT_pos
 int32[3] act_LIFT_vel

@@ -6,7 +6,7 @@ int main(int argc, char** argv)
     ros::init(argc, argv, "target_publisher");
 
     Target_Test target_test;
-    ros::Rate loop_rate(100);
+    ros::Rate loop_rate(50);
 
     while(ros::ok())
     {

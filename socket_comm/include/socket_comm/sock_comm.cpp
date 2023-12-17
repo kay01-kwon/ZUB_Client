@@ -131,6 +131,8 @@ void SOCK_COMM::publish_ActualData()
 
 void SOCK_COMM::actual_data()
 {
+    pub_data.stamp = ros::Time::now();
+
     int offset = 0;
     // 2. Init pan position data
     for(int i = 0; i < NUM_PAN; i++)

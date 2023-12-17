@@ -17,14 +17,21 @@ void Target_Test::publish_test_data()
         time_start = ros::Time::now().toSec();
         test_enable = true;
     }
-
     time_pres = ros::Time::now().toSec() - time_start;
 
-    for(int i = 0; i < 3; i++)
+    target_.stamp = ros::Time::now();
+
+    if(time_pres >=10)
     {
-        target_.target_pos[i] = pos_amp*sin(2*M_PI*0.2*time_pres);
-        target_.target_vel[i] = vel_amp*sin(2*M_PI*0.2*time_pres);
+        for(int i = 0; i < 3; i++)
+        {
+            target_.target_pos[i] = pos_amp*sin(2*M_PI*0.2*(time_pres-10.0));
+            target_.target_vel[i] = vel_amp*sin(2*M_PI*0.2*(time_pres-10.0));
+        }
     }
+
+
+
     nh_publisher.publish(target_);
 
 }

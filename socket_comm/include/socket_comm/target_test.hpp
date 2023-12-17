@@ -23,6 +23,7 @@ class Target_Test{
 
         double time_start;
         double time_pres;
+        double time_run;
 
         int16_t target_torque[NUM_LIFT];
         int32_t target_pos[NUM_PAN];
