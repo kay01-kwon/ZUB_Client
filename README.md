@@ -30,6 +30,7 @@ Information on msg_pkg/target.msg (LIFT, PAN, WHEEL)
 
 Information on msg_pkg/actual.msg (LIFT, PAN, WHEEL)
 |Type	|field name
+|:---:|:---:|
 |time| stamp
 |int16[3]| act_LIFT_torque
 |int32[3]| act_LIFT_pos
