@@ -19,12 +19,13 @@ Terminal 3
 rosrun sock_comm socket_comm_node_test
 ```
 
-message info (LIFT, PAN, WHEEL)
 
-msg_pkg/target
+Information on msg_pkg/target.msg (LIFT, PAN, WHEEL)
+|Type	|field name
+|:---:|:---:|
+|time| stamp
+|int16[3]| target_torque
+|int32[3]| target_pos
+|int32[3]| target_vel
 
-int16[3] target_torque
 
-int32[3] target_pos
-
-int32[3] target_vel
