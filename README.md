@@ -39,3 +39,5 @@ Information on msg_pkg/actual.msg (LIFT, PAN, WHEEL)
 |int16[3]| act_WHEEL_torque
 |int32[3]| act_WHEEL_vel
 
+Images
+<img src="pictures/test1.png">
