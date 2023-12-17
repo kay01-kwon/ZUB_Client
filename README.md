@@ -27,6 +27,8 @@ Information on msg_pkg/target.msg (LIFT, PAN, WHEEL)
 |int32[3]| target_pos
 |int32[3]| target_vel
 
+<img src="pictures/target_msg.png">
+
 
 Information on msg_pkg/actual.msg (LIFT, PAN, WHEEL)
 |Type	|field name
@@ -39,5 +41,8 @@ Information on msg_pkg/actual.msg (LIFT, PAN, WHEEL)
 |int16[3]| act_WHEEL_torque
 |int32[3]| act_WHEEL_vel
 
-Images
+<img src="pictures/actual_msg.png">
+
+
+Test result
 <img src="pictures/test1.png">
