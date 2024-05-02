@@ -12,23 +12,24 @@ SOCK_COMM::SOCK_COMM()
                                 10, 
                                 &SOCK_COMM::callback_TargetData, 
                                 this);
-    
-    nh_publisher = nh.advertise<actual>("actual",10);
 
+    nh_publisher = nh.advertise<actual>("actual",10);
 }
 
 void SOCK_COMM::initialize_data()
 {
     recv_len = 0;
-    // 1. Initialize actual data for LIFT motors
 
-    // 2. Initialize actual data for PAN motors
-    for(int i = 0; i < NUM_PAN; i++)
-        Actual_PAN_pos[i] = 0;
-
-    // 3. Initialize actual data for WHEEL motors
-    for(int i = 0; i < NUM_WHEEL; i++)
+    // Init actual data
+    for(int i = 0; i < 3; i++)
     {
+        Actual_PAN_pos[i] = 0;
+        Actual_PAN_vel[i] = 0;
+
+        Actual_LIFT_torque[i] = 0;
+        Actual_LIFT_pos[i] = 0;
+        Actual_LIFT_vel[i] = 0;
+
         Actual_WHEEL_torque[i] = 0;
         Actual_WHEEL_vel[i] = 0;
     }
@@ -58,7 +59,6 @@ void SOCK_COMM::socket_creation()
         cout<<"Exit"<<endl;
         exit(1);
     }
-
 }
 
 void SOCK_COMM::socket_connection()
@@ -88,16 +88,22 @@ void SOCK_COMM::callback_TargetData(const msg_pkg::targetConstPtr& target)
 {
     int offset = 0;
 
-    for(int i = 0; i < NUM_LIFT; i++)
-        target_LIFT[i] = target->target_LIFT[i];
-
-    for(int i = 0; i < NUM_PAN; i++)
+    for(int i=0; i<NUM_PAN; i++)
     {
         target_PAN[i] = target->target_PAN[i];
-        
-        for(int j = 0; j < 4; j++)
+        for(int j=0; j<4; j++)
         {
-            send_data[j + offset] = (target_PAN[i] >> (8*j));
+            send_data[j+offset] = (target_PAN[i] >> (8*j));
+        }
+        offset += 4;
+    }
+
+    for(int i=0; i<NUM_LIFT; i++)
+    {
+        target_LIFT[i] = target->target_LIFT[i];
+        for(int j=0; j<4; j++)
+        {
+            send_data[j+offset] = (target_LIFT[i] >> (8*j));
         }
         offset += 4;
     }
@@ -105,7 +111,6 @@ void SOCK_COMM::callback_TargetData(const msg_pkg::targetConstPtr& target)
     for(int i = 0; i < NUM_WHEEL; i++)
     {
         target_WHEEL[i] = target->target_WHEEL[i];
-
         for(int j = 0; j < 4; j++)
         {
             send_data[j + offset] = (target_WHEEL[i] >> (8*j));
@@ -113,18 +118,28 @@ void SOCK_COMM::callback_TargetData(const msg_pkg::targetConstPtr& target)
         offset += 4;
     }
 
+    // for(int i=0; i<NUM_LIFT; i++)
+    // {
+    //     target_torque[i] = target->target_torque[i];
+    //     for(int j=0; j<2; j++)
+    //     {
+    //         send_data[j+offset] = (target_torque[i] >> (8*j));
+    //     }
+    // }
 }
 
 void SOCK_COMM::publish_ActualData()
 {
     send(client_sock, send_data, SEND_BUF_LEN, 0);
-
-    // memset(&recv_data, 0, sizeof(recv_data));
-
     recv_len = recv(client_sock, recv_data, sizeof(recv_data), 0);
 
+    // for entire sys
     if(recv_len > 0)
         actual_data();
+
+    // for 1 leg
+    // if(recv_len > 0)
+    //     one_leg_exp_data();
 
     nh_publisher.publish(pub_data);
 }
@@ -133,33 +148,61 @@ void SOCK_COMM::actual_data()
 {
     pub_data.stamp = ros::Time::now();
 
-    int offset = 0;
-    // 2. Init pan position data
-    for(int i = 0; i < NUM_PAN; i++)
+    // Init actual data
+    for(int i = 0; i < 3; i++)
     {
         Actual_PAN_pos[i] = 0;
-    }
+        Actual_PAN_vel[i] = 0;
 
-    // 3. Init wheel torque and velocity data
-    for(int i = 0; i < NUM_WHEEL; i++)
-    {
+        Actual_LIFT_torque[i] = 0;
+        Actual_LIFT_pos[i] = 0;
+        Actual_LIFT_vel[i] = 0;
+
         Actual_WHEEL_torque[i] = 0;
         Actual_WHEEL_vel[i] = 0;
     }
 
-    for(int i = 0; i < NUM_PAN; i++)
+    // Store actual data from recv_data
+    int offset = 0;
+    for(int i = 0; i < 3; i++)
     {
+        // PAN data
         for(int j = 0; j < 4; j++)
         {
             Actual_PAN_pos[i] |= recv_data[j + offset]<<(8*j);
         }
         pub_data.act_PAN_pos[i] = Actual_PAN_pos[i];
-        //cout<<"PAN_POS[ "<<i<<" ]:  "<<Actual_PAN_pos[i]<<"\t";
         offset += 4;
-    }
+        for(int j = 0; j < 4; j++)
+        {
+            Actual_PAN_vel[i] |= recv_data[j + offset]<<(8*j);
+        }
+        pub_data.act_PAN_vel[i] = Actual_PAN_vel[i];
+        offset += 4;
 
-    for(int i = 0; i < NUM_WHEEL; i++)
-    {
+        // LIFT data
+        for(int j = 0; j < 2; j++)
+        {
+            Actual_LIFT_torque[i] |= recv_data[j + offset]<<(8*j);
+        }
+        pub_data.act_LIFT_torque[i] = Actual_LIFT_torque[i];
+        offset += 2;
+
+        for(int j = 0; j < 4; j++)
+        {
+            Actual_LIFT_pos[i] |= recv_data[j + offset]<<(8*j);
+        }
+        pub_data.act_LIFT_pos[i] = Actual_LIFT_pos[i];
+        offset += 4;
+
+        for(int j = 0; j < 4; j++)
+        {
+            Actual_LIFT_vel[i] |= recv_data[j + offset]<<(8*j);
+        }
+        pub_data.act_LIFT_vel[i] = Actual_LIFT_vel[i];
+        offset += 4;
+
+        // WHEEL data
         for(int j = 0; j < 2; j++)
         {
             Actual_WHEEL_torque[i] |= recv_data[j + offset]<<(8*j);
@@ -174,5 +217,4 @@ void SOCK_COMM::actual_data()
         pub_data.act_WHEEL_vel[i] = Actual_WHEEL_vel[i];
         offset += 4;
     }
-
 }

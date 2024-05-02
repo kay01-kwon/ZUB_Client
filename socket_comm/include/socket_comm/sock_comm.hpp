@@ -57,13 +57,18 @@ class SOCK_COMM{
         int recv_len;
 
         int32_t Actual_PAN_pos[NUM_PAN];
+        int32_t Actual_PAN_vel[NUM_PAN];
+
+        int16_t Actual_LIFT_torque[NUM_LIFT];
+        int32_t Actual_LIFT_pos[NUM_LIFT];
+        int32_t Actual_LIFT_vel[NUM_LIFT];
 
         int16_t Actual_WHEEL_torque[NUM_WHEEL];
         int32_t Actual_WHEEL_vel[NUM_WHEEL];
 
-        int16_t target_torque[NUM_LIFT];
-        int32_t target_pos[NUM_PAN];
-        int32_t target_vel[NUM_WHEEL];
+        int32_t target_LIFT[NUM_LIFT];
+        int32_t target_PAN[NUM_PAN];
+        int32_t target_WHEEL[NUM_WHEEL];
 
     
 };

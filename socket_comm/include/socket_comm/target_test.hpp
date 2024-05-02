@@ -3,9 +3,7 @@
 
 #include <iostream>
 #include <ros/ros.h>
-#include <msg_pkg/target.h>
-
-#include "sock_def.hpp"
+#include <msg_pkg/target_dxl.h>
 
 class Target_Test{
 
@@ -25,12 +23,9 @@ class Target_Test{
         double time_pres;
         double time_run;
 
-        int16_t target_torque[NUM_LIFT];
-        int32_t target_pos[NUM_PAN];
-        int32_t target_vel[NUM_WHEEL];
+        int32_t target_pos[3];
 
         int32_t pos_amp;
-        int32_t vel_amp;
 
         bool test_enable;
 

@@ -8,9 +8,9 @@
 #define SEND_BUF_LEN    30
 #define RECV_BUF_LEN    100
 
-#define NUM_LIFT        0
+#define NUM_LIFT        3
 #define NUM_PAN         3
-#define NUM_WHEEL       2
+#define NUM_WHEEL       3
 
 #define NUM_TOTAL_AXIS  (NUM_LIFT + NUM_PAN + NUM_WHEEL)
 

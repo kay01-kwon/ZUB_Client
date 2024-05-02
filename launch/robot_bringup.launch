@@ -1,0 +1,4 @@
+<launch>
+    <node pkg="socket_comm" type="socket_comm_node" name="zub_client"/>
+    <node pkg="dxl_control" type="dxl_control" name="steering_node"/>
+</launch>

@@ -54,7 +54,7 @@ include_directories(
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(${PROJECT_NAME}_node 
 src/main.cpp
-include/socket_comm/sock_comm.cpp)
+include/socket_comm/sock_comm_V1.cpp)
 
 add_executable(${PROJECT_NAME}_node_test 
 src/target_test_main.cpp
